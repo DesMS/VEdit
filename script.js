@@ -67,15 +67,33 @@
 		};
 		await window.replit.messages.showConfirm(`Found FFMPEG`);
 	} catch (err) {
-		await window.replit.messages.showWarning(`FFMPEG not installed, installing..`, 10000);
-		var msg = await window.replit.messages.showNotice(`Starting install...`, 10000);
-		await delay((Math.random() * 500) + 500); // People don't trust instant programs
-		await window.replit.messages.hideMessage(msg);
-		msg = await window.replit.messages.showNotice(`Getting FFMPEG`);
-		await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./* &>/dev/null; curl -o ffmpeg.tar.xz`); // ; mv -f ./*ffmpeg* ./ffmpeg
-		await window.replit.messages.hideMessage(msg);
-		msg = await window.replit.messages.showNotice(`Unpacking FFMPEG`);
+		try {
+			await window.replit.messages.showWarning(`FFMPEG not installed, installing..`, 10000);
+			var msg = await window.replit.messages.showNotice(`Starting install...`, 10000);
+			await delay(0);
+			await delay((Math.random() * 500) + 500); // People don't trust instant programs
+			await window.replit.messages.hideMessage(msg);
+			msg = await window.replit.messages.showNotice(`Getting FFMPEG`, 10000);
+			await delay(0);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./* &>/dev/null; curl -G -L -o ffmpeg.tar.gz https://raw.githubusercontent.com/DesMS/VEdit/main/ffmpeg.tar.gz`); 
+			await window.replit.messages.hideMessage(msg);
+			msg = await window.replit.messages.showNotice(`Unpacking FFMPEG`, 10000);
+			await delay(0);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; tar -xzf ./ffmpeg.tar.gz`);
+			await window.replit.messages.hideMessage(msg);
+			msg = await window.replit.messages.showNotice(`Removing extra files`, 10000);
+			await delay(0);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./ffmpeg.tar.gz`);
+			await window.replit.messages.hideMessage(msg);
+			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 5000);
+		} catch (err) {
+			await window.replit.messages.showError(`Unable to install FFMPEG`, 5000);
+			throw err;
+			return;
+		};
 	};
+	await delay(0);
+	await window.replit.messages.showNotice(`Made by 804kn`);
 	// test
 	// console.log(await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit/ffmpeg; curl -o ffmpeg.tar.xz https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz`));
 	return;

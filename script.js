@@ -99,8 +99,41 @@
 		};
 	};
 	await window.replit.messages.showNotice(`Made by 804kn`, 2000);
+	const execffmpeg = (args) => new Promise(async (resolve, reject) => {
+		var o = [];
+		var out = (await window.replit.exec.spawn({
+			'splitStderr': false,
+			'args': [`bash`, `-c`, `/home/runner/\$REPL_SLUG/.config/.vedit/ffprobe ${typeof args == `string` ? args : args.join(` `)}`],
+			'onOutput': (e) => o.push(e)
+		}));
+		var code = (await out.resultPromise).exitCode;
+		var g = o.join(``).toString().replaceAll(`\r\n`, `\n`).split(`\n`),
+			n = ``;
+		for (const line of g) {
+			if (!line.startsWith(`ffprobe version`) && !line.startsWith(`  built with`) && !line.startsWith(`  configuration`) && !line.startsWith(`  lib`)) {
+				n += `${line}\n`;
+			};
+		};
+		resolve({
+			'output': n,
+			'exitcode': code
+		});
+		return;
+	});
 	await delay(0);
-	// test
-	// console.log(await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit/ffmpeg; curl -o ffmpeg.tar.xz https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz`));
+	const loadFile = (path) => {
+		return new Promise(async (resolve, reject) => {
+			var out = await execffmpeg([`-i`, path]);
+			if (out.output.includes(`Invalid data found when processing input`)) {
+				await window.replit.messages.showError(`Invalid file, ${path}`, 10000);
+				resolve();
+				return;
+			};
+			console.log(out.output);
+			resolve();
+			return;
+		});
+	};
+	await loadFile(file);
 	return;
 })();

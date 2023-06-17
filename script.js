@@ -66,7 +66,7 @@
 			throw ``; // Throw to goto catch
 		};
 		await delay(0);
-		await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffmpeg`); // Change permissions for ffmpeg to avoid error
+		await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffprobe`); // Change permissions for ffmpeg to avoid error
 		await window.replit.messages.showConfirm(`Found FFMPEG`, 2000); // Let them know it was found
 	} catch (err) {
 		try {
@@ -89,7 +89,7 @@
 			await window.replit.messages.hideMessage(msg);
 			msg = await window.replit.messages.showNotice(`Changing file permissions`, 10000);
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffmpeg`);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffprobe`);
 			await window.replit.messages.hideMessage(msg);
 			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 2000);
 		} catch (err) {

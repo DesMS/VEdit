@@ -76,6 +76,7 @@
 		await window.replit.messages.hideMessage(msg);
 		msg = await window.replit.messages.showNotice(`Unpacking FFMPEG`);
 	};
+	// test
 	// console.log(await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit/ffmpeg; curl -o ffmpeg.tar.xz https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz`));
 	return;
 })();

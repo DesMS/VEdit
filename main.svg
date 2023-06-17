@@ -1,0 +1,10 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+	<title>VEdit</title>
+	<style>
+		.s0 { paint-order:stroke fill markers;stroke: #000000;stroke-width: 6;stroke-linejoin: round;;fill: #e9a060 } 
+		.s1 { paint-order:stroke fill markers;stroke: #000000;stroke-width: 6;stroke-linejoin: round;;fill: #e77714 } 
+	</style>
+	<path id="E " class="s0" aria-label="E
+"  d="m612.3 383.5v65.3h-138v86.7h163v67.5h-250.8v-364h251.3v67.8h-163.5v76.7z"/>
+	<path id="V" class="s1" aria-label="V"  d="m402.8 239l108.3 397.5 108.8-397.5h147l-183.8 546h-144l-182.2-546z"/>
+</svg>

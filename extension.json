@@ -1,0 +1,28 @@
+{
+	"name": "VEdit",
+	"description": "Edit video files within replit.",
+	"version": "0",
+	"icon": "/main.svg",
+	"scopes": [
+		{
+			"name": "read",
+			"reason": "Gives the ability to read video files within your repl"
+		},
+		{
+			"name": "write-exec",
+			"reason": "Execute commands, and write your video files, allowing you to edit files flawlessly."
+		},
+		{
+			"name": "experimental-api",
+			"reason": "Be the first to witness what replit can do."
+		}
+	],
+	"fileHandlers": [
+		{
+			"name": "VEdit",
+			"icon": "/main.svg",
+			"handler": "/",
+			"glob": "*"
+		}
+	]
+}

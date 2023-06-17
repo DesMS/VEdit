@@ -134,6 +134,7 @@
 			return;
 		});
 	};
+	// Update
 	await loadFile(file); // load default file (Will be used to load other files, soon (tm))
 	return;
 })();

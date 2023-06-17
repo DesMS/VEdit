@@ -65,7 +65,9 @@
 		if (out.content == null || out.error == `NOT_FOUND`) {
 			throw ``;
 		};
-		await window.replit.messages.showConfirm(`Found FFMPEG`);
+		await delay(0);
+		await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffmpeg`);
+		await window.replit.messages.showConfirm(`Found FFMPEG`, 2000);
 	} catch (err) {
 		try {
 			await window.replit.messages.showWarning(`FFMPEG not installed, installing..`, 10000);
@@ -85,15 +87,19 @@
 			await delay(0);
 			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./ffmpeg.tar.gz`);
 			await window.replit.messages.hideMessage(msg);
-			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 5000);
+			msg = await window.replit.messages.showNotice(`Changing file permissions`, 10000);
+			await delay(0);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffmpeg`);
+			await window.replit.messages.hideMessage(msg);
+			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 2000);
 		} catch (err) {
 			await window.replit.messages.showError(`Unable to install FFMPEG`, 5000);
 			throw err;
 			return;
 		};
 	};
+	await window.replit.messages.showNotice(`Made by 804kn`, 2000);
 	await delay(0);
-	await window.replit.messages.showNotice(`Made by 804kn`);
 	// test
 	// console.log(await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit/ffmpeg; curl -o ffmpeg.tar.xz https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz`));
 	return;

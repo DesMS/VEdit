@@ -81,19 +81,19 @@
 			await window.replit.messages.hideMessage(msg);
 			msg = await window.replit.messages.showNotice(`Unpacking FFMPEG`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; tar -xzf ./ffmpeg.tar.gz`);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; tar -xzf ./ffmpeg.tar.gz`); // Untar ffmpeg
 			await window.replit.messages.hideMessage(msg);
-			msg = await window.replit.messages.showNotice(`Removing extra files`, 10000);
+			msg = await window.replit.messages.showNotice(`Removing extra files`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./ffmpeg.tar.gz`);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./ffmpeg.tar.gz`); // Remove tar
 			await window.replit.messages.hideMessage(msg);
-			msg = await window.replit.messages.showNotice(`Changing file permissions`, 10000);
+			msg = await window.replit.messages.showNotice(`Changing file permissions`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffprobe`);
+			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffprobe`); // Add permissions to ffprobe
 			await window.replit.messages.hideMessage(msg);
-			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 2000);
+			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 2000); // Message to display to the user
 		} catch (err) {
-			await window.replit.messages.showError(`Unable to install FFMPEG`, 5000);
+			await window.replit.messages.showError(`Unable to install FFMPEG`, 5000); // Message to display to the user
 			throw err;
 			return;
 		};

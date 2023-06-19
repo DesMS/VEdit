@@ -13,6 +13,46 @@ body {
 	color: var(--foreground-default);
 }
 
+#invalid, #player, #selector, #loader {
+	position: absolute;
+	height: 100vh;
+	width: 100vw;
+	padding: 0px;
+	margin: 0px;
+	left: 0px;
+	top: 0px;
+}
+
+#loadercir {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 16px;
+	height: 16px;
+	transform: translate(-50%, -50%);
+}
+
+#loader[loading="true"] > svg {
+	animation-fill-mode: none;
+	animation-timing-function: linear;
+	animation-duration: 0.75s;
+	animation-iteration-count: infinite;
+	animation-name: loadanim;
+	animation-direction: normal;
+}
+
+@keyframes loadanim {
+	0% {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+	99.99% {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+	100% {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+}
+
 * {
 	scrollbar-color: var(--background-highest) var(--background-default);
 }

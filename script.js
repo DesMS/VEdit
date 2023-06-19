@@ -77,19 +77,22 @@
 			await window.replit.messages.hideMessage(msg);
 			msg = await window.replit.messages.showNotice(`Getting FFMPEG`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./* &>/dev/null; curl -G -L -o ffmpeg.tar.gz https://raw.githubusercontent.com/DesMS/VEdit/main/ffmpeg.tar.gz`); // Get's the ffmpeg tar.gz from the github page
+			try {
+				await window.replit.exec.exec(`cd /home/runner/\$REPL_SLUG/.config/.vedit; rm -rf ./ffprobe; rm -rf ./install.txt; rm -rf ./ffmpeg.tar.gz`); // Remove old files
+			} catch (err) {}; // Catch err
+			await window.replit.exec.exec(`cd /home/runner/\$REPL_SLUG/.config/.vedit; curl -G -L -o ffmpeg.tar.gz https://raw.githubusercontent.com/DesMS/VEdit/main/ffmpeg.tar.gz`); // Get's the ffmpeg tar.gz from the github page
 			await window.replit.messages.hideMessage(msg);
 			msg = await window.replit.messages.showNotice(`Unpacking FFMPEG`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; tar -xzf ./ffmpeg.tar.gz`); // Untar ffmpeg
+			await window.replit.exec.exec(`cd /home/runner/\$REPL_SLUG/.config/.vedit; tar -xzf ./ffmpeg.tar.gz`); // Untar ffmpeg
 			await window.replit.messages.hideMessage(msg);
 			msg = await window.replit.messages.showNotice(`Removing extra files`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; rm -rf ./ffmpeg.tar.gz`); // Remove tar
+			await window.replit.exec.exec(`cd /home/runner/\$REPL_SLUG/.config/.vedit; rm -rf /home/runner/.config/.vedit/ffmpeg.tar.gz`); // Remove tar
 			await window.replit.messages.hideMessage(msg);
 			msg = await window.replit.messages.showNotice(`Changing file permissions`, 10000); // Message to display to the user
 			await delay(0); // Little delay
-			await window.replit.exec.exec(`cd ~/\$REPL_SLUG/.config/.vedit; chmod 777 ./ffprobe`); // Add permissions to ffprobe
+			await window.replit.exec.exec(`cd /home/runner/\$REPL_SLUG/.config/.vedit; chmod 777 /home/runner/.config/.vedit/ffprobe`); // Add permissions to ffprobe
 			await window.replit.messages.hideMessage(msg);
 			await window.replit.messages.showConfirm(`Successfully installed FFMPEG`, 2000); // Message to display to the user
 		} catch (err) {
@@ -98,38 +101,57 @@
 			return;
 		};
 	};
-	await window.replit.messages.showNotice(`Made by 804kn`, 2000); // Show a notice of who made it (yours truly)
 	const execffmpeg = (args) => new Promise(async (resolve, reject) => { // Promise
 		var o = ``;
 		var out = (await window.replit.exec.spawn({
 			'splitStderr': false, // We don't want it split, just get all the output
-			'args': [`bash`, `-c`, `/home/runner/\$REPL_SLUG/.config/.vedit/ffprobe ${typeof args == `string` ? args : args.join(` `)}`], // Similar to exec, just better
+			'args': [`bash`, `-c`, `/home/runner/\$REPL_SLUG/.config/.vedit/ffprobe -loglevel fatal -hide_banner -print_format json -show_format -show_error -show_private_data -show_streams ${typeof args == `string` ? args : args.join(` `)}`], // Similar to exec, just better
 			'onOutput': (e) => o += e // On output, add it
 		}));
 		var code = (await out.resultPromise).exitCode; // get the exit code
-		var g = o.toString().replaceAll(`\r\n`, `\n`).split(`\n`), // Replace all \r\n with \n (linux), then split
-			n = ``;
-		for (const line of g) { // Go through every line
-			if (!line.startsWith(`ffprobe version`) && !line.startsWith(`  built with`) && !line.startsWith(`  configuration`) && !line.startsWith(`  lib`)) { // Check if it's some debug information that can be ignored
-				n += `${line}\n`; // Add the correct line
-			};
+		var g = o.toString().replaceAll(`\r\n`, `\n`); // Replace all \r\n with \n (linux), then split
+		try {
+			var n = JSON.parse(g);
+			g = n;
+		} catch (err) {
+			g = {};
 		};
 		resolve({
-			'output': n, // output text
+			'output': g, // output text
 			'exitcode': code // output code
 		}); // Resolve the output code (We do this as to not get an unresolvable error with exec)
 		return;
 	});
 	await delay(0); // Little delay
+	var parsed = {};
+	const invalidElem = document.getElementById(`invalid`),
+		playerElem = document.getElementById(`player`),
+		selectorElem = document.getElementById(`selector`),
+		loaderElem = document.getElementById(`loader`);
+	const showInvalidFile = (path) => {
+		loaderElem.style.display = `none`;
+		invalidElem.style.display = null;
+		return;
+	};
+	const showValidFile = (path) => {
+		loaderElem.style.display = `none`;
+		playerElem.style.display = null;
+		return;
+	};
 	const loadFile = (path) => {
 		return new Promise(async (resolve, reject) => {
-			var out = await execffmpeg([`-i`, path]); // Get file info
-			if (out.output.includes(`Invalid data found when processing input`)) { // Check if there was an error
+			await window.replit.messages.showNotice(`Parsing file (This may take awhile)`);
+			var out = (await execffmpeg([`-show_frames`, `-i`, path])).output; // Get file info
+			if (typeof out[`error`] != `undefined` || out.frames.length == 0) { // Check if there was an error
 				await window.replit.messages.showError(`Invalid file, ${path}`, 10000); // Tell them, there was an error
+				showInvalidFile(path);
 				resolve();
 				return;
 			};
-			console.log(out.output);
+			await window.replit.messages.showNotice(`Finished parsing`);
+			parsed = out;
+			console.log(parsed);
+			showValidFile(path);
 			resolve();
 			return;
 		});
